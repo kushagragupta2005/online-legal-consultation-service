@@ -1,0 +1,7 @@
+{
+  "name": "counselconnect-server",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": { "dev": "node -e \"require('./server.js'); setInterval(() => {}, 60000)\"", "start": "node server.js" },
+  "dependencies": { "cors": "^2.8.5", "dotenv": "^16.6.1", "express": "^5.1.0", "multer": "^2.0.2" }
+}
