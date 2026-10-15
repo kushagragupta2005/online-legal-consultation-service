@@ -8,7 +8,11 @@ require("dotenv").config();
 
 const app = express();
 const port = Number(process.env.PORT || 5055);
-const secret = process.env.JWT_SECRET || "local-demo-only-change-this-secret";
+const configuredSecret = process.env.JWT_SECRET?.trim();
+if (!configuredSecret && process.env.NODE_ENV === "production") {
+  throw new Error("JWT_SECRET must be configured in production.");
+}
+const secret = configuredSecret || crypto.randomBytes(64).toString("hex");
 const dataDir = path.join(__dirname, "data");
 const dbPath = path.join(dataDir, "demo-store.json");
 const uploadDir = path.join(__dirname, "uploads", "private");

@@ -44,7 +44,7 @@ npm --prefix server install
 cp server/.env.example server/.env
 ```
 
-For local presentation use, the example configuration works as-is. To set a custom signing secret, edit `JWT_SECRET` in `server/.env` before launching. Then run:
+For local presentation use, the example configuration works as-is; when `JWT_SECRET` is blank, the API creates a random signing key for that run. Set a long random `JWT_SECRET` before deploying, and set `NODE_ENV=production`; the API will refuse to start in production without the secret. Then run:
 
 ```bash
 npm run dev
@@ -64,7 +64,7 @@ Use the **Presentation Demo** sign-in screen to choose a role. All sample accoun
 | Lawyer | `asha@example.test` |
 | Administrator | `admin@example.test` |
 
-All sample names, matters, and appointment details are fictional. Use fictional data only; this demo is not intended to store real client information.
+All sample names, matters, and appointment details are fictional. The shared sample password is intentionally public for the local walkthrough. Use fictional data only; this demo is not intended to store real client information or to provide production authentication.
 
 ## Suggested demo walkthrough
 
