@@ -1,25 +1,62 @@
-# Northstar Legal — Online Consultation Portal
+# Northstar Legal
 
-An independently written internship demo for lawyer discovery, consultation requests, role-based workspaces, case tracking, and private case-document uploads.
+### Online legal consultation portal
 
-## Current status
+A polished full-stack demo for discovering legal professionals, requesting consultations, managing case files, and organizing case documents. Built with React, Vite, Node.js, and Express.
 
-The local demo has a React frontend and an Express API. The API uses a local JSON store for sample records and writes uploaded files to a private local folder. It is intended for demonstration with fictional data only. It is not a production legal service: persistent Azure SQL storage, Azure Blob Storage, Azure Functions, Application Insights, production secrets, and a public deployment are not configured.
+> **Demo status:** The local application and sample workflows are implemented. Records and uploads are stored locally with fictional demo data. Azure services and public application hosting have not been configured.
+
+## What’s included
+
+- **Three role-based workspaces:** client, lawyer, and administrator sample sign-in.
+- **Lawyer discovery:** browse and filter sample professionals by name and practice area.
+- **Consultation requests:** clients can request a time; lawyers can confirm or decline requests.
+- **Case tracking:** view matters and create case files from a lawyer or administrator account.
+- **Document workflow:** upload PDF, DOCX, PNG, and JPEG files up to 5 MB, organize them by case, and download them through access-controlled API routes.
+- **Dashboards:** see role-scoped counts, upcoming consultations, recent cases, and document lists.
+- **Responsive interface:** a custom Northstar Legal workspace designed for a clear project demonstration.
+
+## Technology
+
+| Area | Technology |
+| --- | --- |
+| Frontend | React, Vite, CSS |
+| Backend | Node.js, Express |
+| Authentication | Signed demo tokens and role-scoped API routes |
+| Demo data | Local JSON file created on first launch |
+| Uploaded documents | Local private upload directory |
 
 ## Run locally
 
-Requires Node.js 20 or newer.
+### Requirements
 
-1. From this directory, install dependencies with `npm install`, `npm --prefix client install`, and `npm --prefix server install`.
-2. Copy `server/.env.example` to `server/.env` and set a long random `JWT_SECRET`.
-3. Run `npm run dev`.
-4. Open <http://localhost:5173>.
+- Node.js 20 or newer
+- npm
 
-The API is available at <http://127.0.0.1:5055/api/health>. On first launch it creates sample data in `server/data/demo-store.json`; local uploads are written to `server/uploads/private/`. Both locations are ignored by Git.
+### Setup
 
-## Sample sign-in
+From the repository root, install the dependencies and start the frontend and API:
 
-All sample accounts use `demo1234`:
+```bash
+npm install
+npm --prefix client install
+npm --prefix server install
+cp server/.env.example server/.env
+```
+
+For local presentation use, the example configuration works as-is. To set a custom signing secret, edit `JWT_SECRET` in `server/.env` before launching. Then run:
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:5173](http://localhost:5173). The API health endpoint is [http://127.0.0.1:5055/api/health](http://127.0.0.1:5055/api/health).
+
+The API creates `server/data/demo-store.json` with sample records on first launch. Uploaded files go to `server/uploads/private/`. These generated folders are excluded from Git.
+
+## Sample accounts
+
+Use the **Presentation Demo** sign-in screen to choose a role. All sample accounts use the password `demo1234`.
 
 | Role | Email |
 | --- | --- |
@@ -27,17 +64,54 @@ All sample accounts use `demo1234`:
 | Lawyer | `asha@example.test` |
 | Administrator | `admin@example.test` |
 
-The sample dataset is fictional and should not be replaced with real client information.
+All sample names, matters, and appointment details are fictional. Use fictional data only; this demo is not intended to store real client information.
 
-## Included workflows
+## Suggested demo walkthrough
 
-- Client, lawyer, and administrator sign-in with role-scoped API responses.
-- Lawyer search by name and practice area.
-- Consultation request creation and lawyer confirmation/decline.
-- Case records and client/lawyer assignments.
-- PDF, DOCX, PNG, and JPEG upload (5 MB maximum) with access-controlled downloads.
-- Dashboard counts, upcoming consultations, recent matters, and document lists.
+1. Sign in as the client and browse lawyers by practice area.
+2. Submit a consultation request and review it in Consultations.
+3. Sign out and sign in as the lawyer to confirm or decline the request.
+4. Review the lawyer’s cases and create a sample case file.
+5. Open Documents to attach a sample document to a case.
+6. Sign in as the administrator to show the platform overview.
 
-## Azure work still required
+## Project layout
 
-The current demo deliberately uses local JSON storage. To match the report’s target architecture, replace that adapter with Azure SQL Database and migrations; store uploaded files in private Azure Blob Storage; deploy the Express API to Azure App Service; configure Application Insights; and add an Azure Function for a defined appointment reminder workflow. Configure each Azure resource and verify it before describing it as operational.
+```text
+client/                 React application and Vite configuration
+  src/App.jsx            Application screens and demo interactions
+  src/styles.css         Visual styles
+server/                 Express API and local demo storage
+  server.js              Authentication, role checks, and API routes
+  .env.example           Local environment variable template
+```
+
+## API routes
+
+| Route | Purpose |
+| --- | --- |
+| `GET /api/health` | API status |
+| `POST /api/auth/login` | Sign in with a sample account |
+| `GET /api/lawyers` | Browse the sample lawyer directory |
+| `GET /api/dashboard` | Role-scoped dashboard counts |
+| `GET` / `POST /api/appointments` | View or request consultations |
+| `PATCH /api/appointments/:id` | Confirm or decline a request |
+| `GET` / `POST /api/cases` | View or create case files |
+| `GET` / `POST /api/documents` | List or upload case documents |
+| `GET /api/documents/:id/download` | Download an authorized case document |
+
+Protected routes require a bearer token returned by the login route. Client, lawyer, and administrator access is checked by the API.
+
+## Cloud deployment status
+
+The project’s target architecture mentions Azure App Service, Azure SQL Database, Azure Blob Storage, Azure Functions, and Application Insights. Those services are **not connected in this demo**. The current API uses local JSON storage and local file uploads, and the app has no public deployment yet.
+
+To move toward the target architecture:
+
+1. Replace the JSON data store with Azure SQL Database and add schema migrations.
+2. Move private document storage to Azure Blob Storage and retain authorization checks for downloads.
+3. Deploy the Express API and React frontend through Azure App Service.
+4. Add Application Insights instrumentation and verify telemetry in the Azure resource.
+5. Define an appointment reminder workflow and implement it with an Azure Function.
+
+Treat each item as complete only after the service is configured and verified in the target Azure environment.
